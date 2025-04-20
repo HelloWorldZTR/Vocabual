@@ -27,7 +27,7 @@ class Ui_Frame(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.favouriteButton = PushButton(Frame)
+        self.favouriteButton = TogglePushButton(Frame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -149,4 +149,4 @@ class Ui_Frame(object):
         self.knownButton.setText(_translate("Frame", "认识"))
         self.unknownButton.setText(_translate("Frame", "不认识"))
         self.label_4.setText(_translate("Frame", "今日剩余"))
-from qfluentwidgets import ProgressBar, PushButton
+from qfluentwidgets import ProgressBar, PushButton, TogglePushButton
