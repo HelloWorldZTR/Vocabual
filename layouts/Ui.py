@@ -44,3 +44,4 @@ class MainWindow(FluentWindow):
         self.setWindowTitle('Vocalbul')
 
 
+
