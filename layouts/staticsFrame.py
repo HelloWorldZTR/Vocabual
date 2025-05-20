@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QHBoxLayout, QWidget, Q
 import PyQt5.Qt as Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from qframelesswindow.webengine import FramelessWebEngineView
-from qfluentwidgets import ElevatedCardWidget, ProgressRing, BodyLabel, ImageLabel
+from qfluentwidgets import ElevatedCardWidget, ProgressRing, BodyLabel, ImageLabel, TitleLabel
 
 
 import tempfile
@@ -78,14 +78,23 @@ class ProgressRingCardWidget(ElevatedCardWidget):
     def __init__(self, parent=None, percentage = 0):
         super().__init__(parent)
 
-        self.setLayout(QHBoxLayout())
+        self.setLayout(QVBoxLayout())
+        self.row1 = QHBoxLayout()
+        self.row2 = QHBoxLayout()
+        self.layout().addLayout(self.row1)
+        self.layout().addLayout(self.row2)
 
+        self.header = TitleLabel(self)
+        self.header.setText("统计信息")
+        self.row1.addWidget(self.header)
+        self.row1.addItem(QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        
         self.hspacer = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.prog = ProgressRing(self)
         self.prog.setRange(0, 100)
-        self.layout().addItem(self.hspacer)
-        self.layout().addWidget(self.prog)
-        self.layout().addItem(self.hspacer)
+        self.row2.addItem(self.hspacer)
+        self.row2.addWidget(self.prog)
+        self.row2.addItem(self.hspacer)
 
         class _InfoWidget(QWidget):
             def __init__(self, parent=None):
