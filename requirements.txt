@@ -2,3 +2,4 @@ pyqt5
 PyQt-Fluent-Widgets
 pyecharts
 PyQtWebEngine
+pandas
