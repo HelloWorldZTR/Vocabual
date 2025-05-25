@@ -4,7 +4,60 @@ from utils.uitools import FrameWrapper
 from .Ui_recite import Ui_Frame 
 from extern import webDict
 from utils.audio import PlaysoundPlayer
+import re
 import settings
+
+import re
+
+def getMaskedText(text, mask_char='_'):
+    # 要保留的词性词（支持多种词性）
+    return '_'* len(text)  # 简单的实现，直接将文本全部替换为下划线
+    # pos_tags = ['n.', 'v.', 'adj.', 'adv.', 'pron.', 'prep.', 'conj.', 'interj.', 'a.', 'vt.', 'vi.']
+ 
+    # # 占位替换表
+    # placeholder_map = {}
+    
+    # # 替换词性词为唯一占位符
+    # def replace_pos(match):
+    #     tag = match.group(0)
+    #     placeholder = f"__POS_{len(placeholder_map)}__"
+    #     placeholder_map[placeholder] = tag
+    #     return placeholder
+    
+    # pattern = r'\b(?:' + '|'.join(re.escape(tag) for tag in pos_tags) + r')\b'
+    # text_with_placeholders = re.sub(pattern, replace_pos, text)
+
+    # # 替换非占位符中的字母为 mask_char
+    # masked = ''
+    # i = 0
+    # while i < len(text_with_placeholders):
+    #     # 检查是否是占位符开头
+    #     if text_with_placeholders.startswith('__POS_', i):
+    #         end = text_with_placeholders.find('__', i + 6)
+    #         if end != -1:
+    #             end += 2  # 包含后面的两个 _
+    #             placeholder = text_with_placeholders[i:end]
+    #             masked += placeholder
+    #             i = end
+    #         else:
+    #             # fallback 防止死循环
+    #             masked += text_with_placeholders[i]
+    #             i += 1
+    #     else:
+    #         ch = text_with_placeholders[i]
+    #         if ch.isalpha():
+    #             masked += mask_char
+    #         else:
+    #             masked += ch
+    #         i += 1
+
+    # # 替换回原始词性词
+    # for placeholder, tag in placeholder_map.items():
+    #     masked = masked.replace(placeholder, tag)
+
+    # return masked
+
+
 
 class ReciteFrame(FrameWrapper):
     """ 背单词界面初始化 """
@@ -25,6 +78,7 @@ class ReciteFrame(FrameWrapper):
         self.frame.pronounceLabel2.setText("[美]"+self.pronounceUS)
         self.frame.wordLabel.setText(self.currentWord)
         self.frame.progressBar.setProperty('value', 0)
+        self.frame.explanationLabel.setText(getMaskedText(self.currentTranslation))
         if settings.get_favourite_status(self.wordList[self.currentWordIndex].id):
             self.frame.favouriteButton.blockSignals(True)  # 阻止信号触发
             self.frame.favouriteButton.setChecked(True)
@@ -88,7 +142,7 @@ class ReciteFrame(FrameWrapper):
             self.frame.pronounceLabel1.setText("[英]"+self.pronounceUK)
             self.frame.pronounceLabel2.setText("[美]"+self.pronounceUS)
             self.frame.wordLabel.setText(self.currentWord)
-            self.frame.explanationLabel.setText('')
+            self.frame.explanationLabel.setText(getMaskedText(self.currentTranslation))
             if settings.get_favourite_status(self.wordList[self.currentWordIndex].id):
                 self.frame.favouriteButton.blockSignals(True)
                 self.frame.favouriteButton.setChecked(True)

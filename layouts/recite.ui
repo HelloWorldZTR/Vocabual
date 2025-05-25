@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>803</width>
-    <height>583</height>
+    <height>595</height>
    </rect>
   </property>
   <property name="font">
@@ -258,6 +258,12 @@
        </item>
        <item>
         <widget class="QLabel" name="explanationLabel">
+         <property name="maximumSize">
+          <size>
+           <width>1200</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="font">
           <font>
            <family>微软雅黑</family>
@@ -266,6 +272,9 @@
          </property>
          <property name="text">
           <string/>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

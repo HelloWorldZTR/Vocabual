@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\学习\程序设计实习\Vocabual\layouts\recite.ui'
+# Form implementation generated from reading ui file 'd:\Develop\Vocabual\layouts\recite.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Frame(object):
     def setupUi(self, Frame):
         Frame.setObjectName("Frame")
-        Frame.resize(803, 583)
+        Frame.resize(803, 595)
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(20)
@@ -118,11 +118,13 @@ class Ui_Frame(object):
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem4)
         self.explanationLabel = QtWidgets.QLabel(Frame)
+        self.explanationLabel.setMaximumSize(QtCore.QSize(1200, 16777215))
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
         font.setPointSize(18)
         self.explanationLabel.setFont(font)
         self.explanationLabel.setText("")
+        self.explanationLabel.setWordWrap(True)
         self.explanationLabel.setObjectName("explanationLabel")
         self.horizontalLayout_3.addWidget(self.explanationLabel)
         spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
