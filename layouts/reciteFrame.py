@@ -11,12 +11,48 @@ class ReciteFrame(FrameWrapper):
         self.currentWord = 'abandon'
         self.player = PlaysoundPlayer()
         super().__init__(Ui_Frame(), parent=parent, unique_name=unique_name)
+        self.frame.ok.hide()
+        self.frame.notok.hide()
+        self.frame.next.hide()
 
+    """不同按钮"""
+    def switch_knownButton(self):
+        self.frame.knownButton.hide()
+        self.frame.unknownButton.hide()
+        self.frame.ok.show()
+        self.frame.notok.show()
+        self.frame.explanationLabel.setText("v.放弃；抛弃；废弃；遗弃\n"
+"n.放肆；狂热；任性；恣意任性")
+    def switch_unknownButton(self):
+        self.frame.knownButton.hide()
+        self.frame.unknownButton.hide()
+        self.frame.next.show()
+        self.frame.explanationLabel.setText("v.放弃；抛弃；废弃；遗弃\n"
+"n.放肆；狂热；任性；恣意任性")
+    def switch_ok(self):
+        self.frame.ok.hide()
+        self.frame.notok.hide()
+        self.frame.next.show()
+    def switch_notok(self):
+        self.frame.ok.hide()
+        self.frame.notok.hide()
+        self.frame.next.show()
+    def switch_next(self):
+        self.frame.ok.hide()
+        self.frame.notok.hide()
+        self.frame.next.hide()
+        self.frame.knownButton.show()
+        self.frame.unknownButton.show()
+        self.frame.explanationLabel.setText("下一个")
     """连接信号和槽函数"""
     def setupConnections(self):
         self.frame.favouriteButton.clicked.connect(lambda: self.logEvent('添加到收藏夹'))
-        self.frame.knownButton.clicked.connect(lambda: self.frame.wordLabel.setText('Banana'))
-        self.frame.unknownButton.clicked.connect(lambda: self.logEvent('未知单词'))
+        #self.frame.knownButton.clicked.connect(lambda: self.frame.wordLabel.setText('Banana'))
+        self.frame.knownButton.clicked.connect(lambda: self.switch_knownButton())
+        self.frame.unknownButton.clicked.connect(lambda: self.switch_unknownButton())
+        self.frame.ok.clicked.connect(lambda: self.switch_ok())
+        self.frame.notok.clicked.connect(lambda: self.switch_notok())
+        self.frame.next.clicked.connect(lambda: self.switch_next())
         self.frame.pronBtn1.clicked.connect(lambda: self.pronounce(0))  # 英式发音按钮
         self.frame.pronBtn2.clicked.connect(lambda: self.pronounce(1))  # 美式发音按钮
 
