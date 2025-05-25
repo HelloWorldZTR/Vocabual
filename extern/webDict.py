@@ -1,4 +1,5 @@
 import requests
+import tempfile
 
 """
 Functions to query web dictionaries.
@@ -27,16 +28,25 @@ def query_youdao(word) -> list:
         phrs_list = None
     try:
         pic = data['pic_dict']['pic'][0]['image']
+        temp = tempfile.NamedTemporaryFile(delete=False, suffix='.jpg')
+        with open(temp.name, 'wb') as f:
+            f.write(requests.get(pic).content)
+        pic = temp.name
     except:
         pic = None
     return (expl, phrs_list, pic)
 
-def query_spelling(word) -> str:
-    url = f"http://dict.youdao.com/dictvoice?type=0&audio={word}"
+def query_spelling(word:str, type:int=0) -> bytes:
+    """
+    查询单词的发音
+    type: 0 - 英式发音, 1 - 美式发音
+    """
+    url = f"http://dict.youdao.com/dictvoice?type={type}&audio={word}"
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
     res = requests.get(url, headers=headers)
+
     if res.status_code == 200:
         return res.content
     else:
