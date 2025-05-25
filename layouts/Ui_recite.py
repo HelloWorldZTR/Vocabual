@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\Develop\Vocabual\layouts\recite.ui'
+# Form implementation generated from reading ui file 'e:\VSwork\helloworld\Vocabual\layouts\recite.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
