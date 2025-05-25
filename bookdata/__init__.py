@@ -12,14 +12,22 @@ class Word:
         self.translation = translation
         # self.relation_book_word_id_list = []
         # self.book_list = []
+    def __repr__(self):
+        return f"Word(id={self.id}, word='{self.word}', phonetic_uk='{self.phonetic_uk}', phonetic_us='{self.phonetic_us}', difficulty={self.difficulty}, translation='{self.translation}')"
+    def __str__(self):
+        return self.word
 
 class Book:
-    def __init__(self, id, title, word_count):
+    def __init__(self, id, title, word_count, word_list=None):
         self.id = id
         self.title = title
         self.word_count = word_count
         # self.relation_book_word_id_list = []
-        # self.word_list = []
+        self.word_list = word_list if word_list is not None else []
+    def __repr__(self):
+        return f"Book(id={self.id}, title='{self.title}', word_count={self.word_count})"
+    def __str__(self):
+        return self.title
 
 
 def get_root_dir():
@@ -82,10 +90,9 @@ def build_relationships(relation_df, word_dict, book_dict):
         
         if book_id in book_dict and word_id in word_dict:
             book = book_dict[book_id]
-            word = word_dict[word_id]
             
             # 双向添加关系（不存储关系ID）
-            # book.word_list.append(word)
+            book.word_list.append(word_id)
             # word.book_list.append(book)
 
 def init_system():
@@ -151,7 +158,8 @@ def from_feathers():
         book = Book(
             id=row['id'],
             title=row['title'],
-            word_count=row['word_count']
+            word_count=row['word_count'],
+            word_list=row['word_list']
         )
         books[book.id] = book
     
