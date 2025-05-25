@@ -21,10 +21,16 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QLabel" name="wordLabel_2">
+       <property name="maximumSize">
+        <size>
+         <width>1200</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="font">
         <font>
          <family>Cascadia Mono SemiBold</family>
-         <pointsize>90</pointsize>
+         <pointsize>28</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -37,6 +43,9 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -58,12 +67,18 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="PillPushButton" name="A">
+          <widget class="PushButton" name="A">
            <property name="minimumSize">
             <size>
              <width>200</width>
              <height>80</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
            </property>
            <property name="text">
             <string>不认识</string>
@@ -71,7 +86,7 @@
           </widget>
          </item>
          <item>
-          <widget class="PillPushButton" name="B">
+          <widget class="PushButton" name="B">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -84,13 +99,19 @@
              <height>80</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>认识</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="PillPushButton" name="C">
+          <widget class="PushButton" name="C">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -103,18 +124,30 @@
              <height>80</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>认识</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="PillPushButton" name="D">
+          <widget class="PushButton" name="D">
            <property name="minimumSize">
             <size>
              <width>200</width>
              <height>80</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
            </property>
            <property name="text">
             <string>不认识</string>
@@ -160,7 +193,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PillPushButton</class>
+   <class>PushButton</class>
    <extends>QPushButton</extends>
    <header location="global">qfluentwidgets</header>
   </customwidget>
