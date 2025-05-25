@@ -1,0 +1,1 @@
+pyinstaller --add-data "bookdata;bookdata"  --add-data "settings;settings" --add-data "favico.png;favico.png" --icon "favico.ico" --collect-data pyecharts --noconsole .\main.py
