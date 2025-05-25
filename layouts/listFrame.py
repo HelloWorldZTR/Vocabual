@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (
     QHeaderView,
 )
 from extern import webDict
+from PyQt5.QtCore import Qt
 
 from qfluentwidgets import TableWidget, PushButton, TeachingTip, BodyLabel, TeachingTipTailPosition
 
@@ -30,15 +31,15 @@ class ListFrame(QFrame):
         self.wordsTable.setBorderVisible(False)
         self.wordsTable.setColumnCount(5)
         self.wordsTable.setHorizontalHeaderLabels(
-            ["单词", "读音", "释义", "难度", "操作"]
+            ["单词   ", "读音", "释义", "难度", "操作"]
+        )
+        self.wordsTable.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeToContents
         )
         self.wordsTable.horizontalHeader().setSectionResizeMode(
             2, QHeaderView.Stretch
         )  # 释义列自适应宽度
         # 其余列自适应内容
-        self.wordsTable.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.ResizeToContents
-        )
         self.wordsTable.horizontalHeader().setSectionResizeMode(
             1, QHeaderView.ResizeToContents
         )
@@ -62,8 +63,9 @@ class ListFrame(QFrame):
                 f"[英]{word.phonetic_uk} [美]{word.phonetic_us}",
                 word.translation,
                 word.difficulty,
-                None  # 操作按钮将在后续设置
+                word.id  # 操作按钮将在后续设置
             ])
+        # print(data)
         self._setData(data)
         self.setupConnections()
 
@@ -76,12 +78,19 @@ class ListFrame(QFrame):
         self.wordsTable.setRowCount(len(data))
         for i, word in enumerate(data):
             self.wordsTable.setCellWidget(i, 0, BodyLabel(word[0]))
-            self.wordsTable.setItem(i, 1, QTableWidgetItem(word[1]))
+            item = QTableWidgetItem(word[1])
+            item.setData(Qt.UserRole, word[4])  # 保存单词ID到UserRole
+            self.wordsTable.setItem(i, 1, item)  # 保存原始数据
             self.wordsTable.setItem(i, 2, QTableWidgetItem(word[2]))
             self.wordsTable.setItem(i, 3, QTableWidgetItem(word[3]))
             self.wordsTable.setCellWidget(i, 4, PushButton("删除"))
 
     def setupConnections(self):
+        try:
+            self.wordsTable.cellClicked.disconnect()
+        except TypeError:
+            pass
+    
         for i in range(self.wordsTable.rowCount()):
             button = self.wordsTable.cellWidget(i, 4)
             try:
@@ -90,19 +99,26 @@ class ListFrame(QFrame):
                 pass
             button.clicked.connect(lambda _, row=i: self.deleteAction(row))
 
-        def onSelectionChanged():
-            table = self.wordsTable
-            selected_rows = table.selectionModel().selectedRows()
-            for index in selected_rows:
-                # print(f"Selected row: {index.row()}")
-                item = table.cellWidget(index.row(), 0)
-                if item:
+        def onCellClicked(row, column):
+            print(f"[log] Cell clicked at row {row}, column {column}")
+            if column == 0:
+                item = self.wordsTable.cellWidget(row, column)
+                if item is not None:
                     self.showTeachingTip(item)
 
-        self.wordsTable.selectionModel().selectionChanged.connect(onSelectionChanged)
+        self.wordsTable.cellClicked.connect(onCellClicked)
 
     def deleteAction(self, i):
-        print(f"Delete action for row {i}")
+        self.wordsTable.blockSignals(True)  # 阻止信号传递，避免多次触发
+        word_id = self.wordsTable.item(i, 1).data(Qt.UserRole)
+        if word_id is not None:
+            settings.remove_favourite(word_id)
+            self.wordsTable.removeRow(i)
+            print(f"[log] Removed word with ID: {word_id}")
+        else:
+            # 如果没有找到对应的ID，可能是数据不完整或操作错误
+            print(f"[err] Error: No word ID found for row {i}")
+        self.wordsTable.blockSignals(False)  # 恢复信号传递
 
     def showTeachingTip(self, target):
         expl, phrs, pic = webDict.query_youdao(target.text())
