@@ -3,3 +3,5 @@ PyQt-Fluent-Widgets
 pyecharts
 PyQtWebEngine
 pandas
+playsound
+requests
