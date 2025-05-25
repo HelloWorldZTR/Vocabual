@@ -85,12 +85,14 @@ class ReviewFrame(FrameWrapper):
         if id == self.answer:
             self.buttons[id].setText( self.buttons[id].text() + " ✔")
             self.buttons[id].setStyleSheet("color: green;")
+            settings.set_reviewed(self.wordList[self.currentWordIndex].id)
+            self.logEvent(f'单词 {self.wordList[self.currentWordIndex].word} 已复习')
         else:
             self.buttons[id].setText( self.buttons[id].text() + " ✘")
             self.buttons[self.answer].setText( self.buttons[self.answer].text() + " ✔")
             self.buttons[id].setStyleSheet("color: red;")
             self.buttons[self.answer].setStyleSheet("color: green;")
-        QTimer.singleShot(5000, self.nextWord)
+        QTimer.singleShot(2000, self.nextWord)
     
         
     """连接信号和槽函数"""

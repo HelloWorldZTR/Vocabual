@@ -38,16 +38,37 @@ class StaticsFrame(QFrame):
         self.rightLayout.setStretch(0, 1)
 
         # 测试数据
-        import random
-        startDate = datetime.date(2023, 3, 1)
-        endDate = datetime.date(2023, 3, 30)
-        data = [((startDate + datetime.timedelta(days=i)).strftime("%Y-%m-%d"), random.randint(0, 100)) for i in range((endDate - startDate).days + 1)]
+        # import random
+        # startDate = datetime.date(2023, 3, 1)
+        # endDate = datetime.date(2023, 3, 30)
+        # data = [((startDate + datetime.timedelta(days=i)).strftime("%Y-%m-%d"), random.randint(0, 100)) for i in range((endDate - startDate).days + 1)]
+        # self.setCalendarInfo(data, startDate, endDate)
+
+        # date = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        # learned = [(date[i], random.randint(0, 100)) for i in range(7)]
+        # reviewed = [(date[i], random.randint(0, 100)) for i in range(7)]
+        # self.setKLineInfo(learned, reviewed)
+        today = datetime.date.today()
+        startDate = today - datetime.timedelta(days = 30)
+        endDate = today
+        data = []
+        for day in range((endDate - startDate).days + 1):
+            date = (startDate + datetime.timedelta(days=day)).strftime("%Y-%m-%d")
+            learned_count = len(settings.settings['daily_record'].get(date, []))
+            reviewed_count = len(settings.settings['daily_review_record'].get(date, []))
+            data.append((date, learned_count + reviewed_count))
         self.setCalendarInfo(data, startDate, endDate)
 
-        date = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-        learned = [(date[i], random.randint(0, 100)) for i in range(7)]
-        reviewed = [(date[i], random.randint(0, 100)) for i in range(7)]
+        startDate = today - datetime.timedelta(days=7)
+        endDate = today
+        weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        date = [weekdays[(startDate + datetime.timedelta(days=i)).weekday()] for i in range((endDate - startDate).days + 1)]
+        learned = [len(settings.settings['daily_record'].get((startDate + datetime.timedelta(days=i)).strftime("%Y-%m-%d"), [])) for i in range((endDate - startDate).days + 1)]
+        learned = list(zip(date, learned))
+        reviewed = [len(settings.settings['daily_review_record'].get((startDate + datetime.timedelta(days=i)).strftime("%Y-%m-%d"), [])) for i in range((endDate - startDate).days + 1)]
+        reviewed = list(zip(date, reviewed))
         self.setKLineInfo(learned, reviewed)
+
 
     def setCalendarInfo(self, data, beginDate, endDate):
         """
@@ -79,6 +100,27 @@ class StaticsFrame(QFrame):
             bookname, wordcount, learned, f'单词数量: {learned}/{wordcount}\n 每日学习: {settings.settings["daily_word_cnt"]} 个单词\n '
         )
 
+        today = datetime.date.today()
+        startDate = today - datetime.timedelta(days = 30)
+        endDate = today
+        data = []
+        for day in range((endDate - startDate).days + 1):
+            date = (startDate + datetime.timedelta(days=day)).strftime("%Y-%m-%d")
+            learned_count = len(settings.settings['daily_record'].get(date, []))
+            reviewed_count = len(settings.settings['daily_review_record'].get(date, []))
+            data.append((date, learned_count + reviewed_count))
+        self.setCalendarInfo(data, startDate, endDate)
+
+        startDate = today - datetime.timedelta(days=7)
+        endDate = today
+        weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        date = [weekdays[(startDate + datetime.timedelta(days=i)).weekday()] for i in range((endDate - startDate).days + 1)]
+        learned = [len(settings.settings['daily_record'].get((startDate + datetime.timedelta(days=i)).strftime("%Y-%m-%d"), [])) for i in range((endDate - startDate).days + 1)]
+        learned = list(zip(date, learned))
+        reviewed = [len(settings.settings['daily_review_record'].get((startDate + datetime.timedelta(days=i)).strftime("%Y-%m-%d"), [])) for i in range((endDate - startDate).days + 1)]
+        reviewed = list(zip(date, reviewed))
+        self.setKLineInfo(learned, reviewed)
+
 
 class ProgressRingCardWidget(ElevatedCardWidget):
     def __init__(self, parent=None, percentage = 0):
@@ -96,7 +138,7 @@ class ProgressRingCardWidget(ElevatedCardWidget):
         self.hspacer = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.prog = ProgressRing(self)
         self.prog.setRange(0, 100)
-        
+
         self.layout().addItem(self.hspacer)
         self.layout().addWidget(self.prog)
         self.layout().addItem(self.hspacer)
