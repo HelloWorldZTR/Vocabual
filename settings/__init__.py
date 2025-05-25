@@ -14,7 +14,9 @@ def _load_default_settings():
     settings['learned'] = []
     settings['unlearned'] = []
     settings['daily_record'] = {}
+    settings['daily_review_record'] = {}
     settings['favourite'] = []
+    set_book_id('7f39f8317fbdb1988ef4c628') # 假设 book1 是一个有效的书籍ID
 def _load_settings():
     with open(path, "r", encoding="utf-8") as f:
         settings.update(json.load(f))
@@ -24,6 +26,7 @@ def _load_settings():
     settings['learned'] = settings.get("learned", [])
     settings['unlearned'] = settings.get("unlearned", [])
     settings['daily_record'] = settings.get("daily_record", {})
+    settings['daily_review_record'] = settings.get("daily_review_record", {})
     settings['favourite'] = settings.get("favourite", [])
 def _save_settings():
     with open(path, "w", encoding="utf-8") as f:
@@ -84,10 +87,21 @@ def set_learned(word_id):
         settings['unlearned'].remove(word_id)
     if word_id not in settings['learned']:
         settings['learned'].append(word_id)
+    
     today = datetime.date.today().isoformat()
     if today not in settings['daily_record']:
         settings['daily_record'][today] = []
     settings['daily_record'][today].append(word_id)
+    _save_settings()
+
+def set_reviewed(word_id):
+    """将单词设置为已复习,只有对了才算复习过"""
+    if word_id in settings['favourite']:
+        settings['favourite'].remove(word_id)
+    today = datetime.date.today().isoformat()
+    if today not in settings['daily_review_record']:
+        settings['daily_review_record'][today] = []
+    settings['daily_review_record'][today].append(word_id)
     _save_settings()
 
 if os.path.exists(path):

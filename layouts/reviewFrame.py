@@ -12,9 +12,11 @@ class ReviewFrame(FrameWrapper):
         super().__init__(Ui_Frame(), parent=parent, unique_name=unique_name)
         self.root = parent
         self.wordList = settings.get_favourite_list()
+        self.buttons = [None, self.frame.A, self.frame.B, self.frame.C, self.frame.D]
         if len(self.wordList) == 0:
-            self.logEvent('没有单词可供背诵')
-            Dialog.warning(self.root, "没有单词可供背诵", "请先添加单词到收藏夹")
+            self.frame.wordLabel_2.setText('没有单词可以复习啦！')
+            for i in range(1, 5):
+                self.buttons[i].hide()
             return
         random.shuffle(self.wordList)  # 随机打乱单词列表
         self.otherWordList = list(bookdata.words.values())
@@ -24,7 +26,6 @@ class ReviewFrame(FrameWrapper):
         self.currentTranslation = self.wordList[self.currentWordIndex].translation
         self.stage=random.randint(0, 1)
         self.answer=random.randint(1,4)
-        self.buttons = [None, self.frame.A, self.frame.B, self.frame.C, self.frame.D]
         if self.stage == 0:
             self.frame.wordLabel_2.setText(self.currentWord)
             for i in range(1, 5):
@@ -103,4 +104,35 @@ class ReviewFrame(FrameWrapper):
         print("[log] " + text)
         
     def updateWindow(self):
-        pass
+        self.wordList = settings.get_favourite_list()
+        if len(self.wordList) == 0:
+            self.frame.wordLabel_2.setText('没有单词可以复习啦！')
+            for i in range(1, 5):
+                self.buttons[i].hide()
+            return
+        random.shuffle(self.wordList)  # 随机打乱单词列表
+        self.otherWordList = list(bookdata.words.values())
+        #print(type(self.otherWordList))
+        self.currentWordIndex = 0
+        self.currentWord = self.wordList[self.currentWordIndex].word
+        self.currentTranslation = self.wordList[self.currentWordIndex].translation
+        self.stage=random.randint(0, 1)
+        self.answer=random.randint(1,4)
+        if self.stage == 0:
+            self.frame.wordLabel_2.setText(self.currentWord)
+            for i in range(1, 5):
+                if i == self.answer:
+                    self.buttons[i].setText(self.currentTranslation)
+                else:
+                    while True:
+                        randomWord = random.choice(self.otherWordList)
+                        if randomWord.translation != self.currentTranslation and randomWord.translation != "暂无翻译":
+                            break
+                    self.buttons[i].setText(randomWord.translation)
+        else:
+            self.frame.wordLabel_2.setText(self.currentTranslation)
+            for i in range(1, 5):
+                if i == self.answer:
+                    self.buttons[i].setText(self.currentWord)
+                else:
+                    self.buttons[i].setText((random.choice(self.otherWordList)).word)

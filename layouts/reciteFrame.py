@@ -42,7 +42,7 @@ class ReciteFrame(FrameWrapper):
         self.frame.notok.show()
         self.frame.explanationLabel.setText(self.currentTranslation)
     def switch_unknownButton(self):
-        self.addToFavourite()
+        self.addToFavourite(True)
         self.frame.knownButton.hide()
         self.frame.unknownButton.hide()
         self.frame.next.show()
@@ -52,7 +52,7 @@ class ReciteFrame(FrameWrapper):
         self.frame.notok.hide()
         self.frame.next.show()
     def switch_notok(self):
-        self.addToFavourite()
+        self.addToFavourite(True)
         self.frame.ok.hide()
         self.frame.notok.hide()
         self.frame.next.show()
@@ -112,8 +112,12 @@ class ReciteFrame(FrameWrapper):
     def logEvent(self, text):
         print("[log] " + text)
     
-    def addToFavourite(self):
+    def addToFavourite(self, force:bool=False):
         word = self.wordList[self.currentWordIndex]
+        if force:
+            self.frame.favouriteButton.blockSignals(True)  # 阻止信号触发
+            self.frame.favouriteButton.setChecked(True)
+            self.frame.favouriteButton.blockSignals(False)
         if not self.frame.favouriteButton.isChecked():
             self.logEvent('从收藏夹中删除'+word.word)
             settings.remove_favourite(word.id)
