@@ -70,7 +70,7 @@ class BookshelfFrame(QFrame):
                 child_item = QTreeWidgetItem(book_item)
                 child_item.setText(0, self.treedata[item]['children'][child]['title'])
                 child_item.setData(0, Qt.UserRole, child)
-                # 这里可以添加更多的子节点或属性
+                # 这里可以添加更多的子节点或属性9
                 book_item.addChild(child_item)
 
                 if settings.settings['book_id'] == child:

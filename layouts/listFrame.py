@@ -9,7 +9,9 @@ from PyQt5.QtWidgets import (
 )
 from extern import webDict
 
-from qfluentwidgets import TableWidget, PushButton, TeachingTip, BodyLabel
+from qfluentwidgets import TableWidget, PushButton, TeachingTip, BodyLabel, TeachingTipTailPosition
+
+import settings
 
 
 class ListFrame(QFrame):
@@ -28,7 +30,7 @@ class ListFrame(QFrame):
         self.wordsTable.setBorderVisible(False)
         self.wordsTable.setColumnCount(5)
         self.wordsTable.setHorizontalHeaderLabels(
-            ["单词", "读音", "释义", "统计", "操作"]
+            ["单词", "读音", "释义", "难度", "操作"]
         )
         self.wordsTable.horizontalHeader().setSectionResizeMode(
             2, QHeaderView.Stretch
@@ -48,37 +50,25 @@ class ListFrame(QFrame):
         )
         self.wordsTable.verticalHeader().setVisible(False)
 
-        # 测试用
-        _data = [
-            (
-                "apple",
-                "哎朋友",
-                "苹果苹果苹果苹果苹果苹果苹果苹果苹果...苹果苹果",
-                "0/10",
-                "删除",
-            ),
-            (
-                "banana",
-                "把拿拿",
-                "香蕉香蕉香蕉香蕉香蕉香蕉香蕉香蕉香蕉香蕉...",
-                "0/10",
-                "删除",
-            ),
-            (
-                "orange",
-                "欧润吉",
-                "橘子香蕉香蕉香蕉香蕉香蕉香蕉香蕉香蕉香蕉..香蕉",
-                "0/10",
-                "删除",
-            ),
-            ("grape", "sss", "葡萄", "0/10", "删除"),
-            ("watermelon", "sss", "香蕉香蕉香蕉香蕉香蕉香蕉香蕉", "0/10", "删除"),
-        ]
-        self.setData(_data)
+        self.updateWindow()
+        # self.setupConnections()
 
+    def updateWindow(self):
+        favourite_list = settings.get_favourite_list()
+        data = []
+        for word in favourite_list:
+            data.append([
+                word.word,
+                f"[英]{word.phonetic_uk} [美]{word.phonetic_us}",
+                word.translation,
+                word.difficulty,
+                None  # 操作按钮将在后续设置
+            ])
+        self._setData(data)
         self.setupConnections()
 
-    def setData(self, data):
+
+    def _setData(self, data):
         """
         设置数据
         data 为一个列表，包含单词、释义、统计和操作
@@ -94,6 +84,10 @@ class ListFrame(QFrame):
     def setupConnections(self):
         for i in range(self.wordsTable.rowCount()):
             button = self.wordsTable.cellWidget(i, 4)
+            try:
+                button.clicked.disconnect()
+            except TypeError:
+                pass
             button.clicked.connect(lambda _, row=i: self.deleteAction(row))
 
         def onSelectionChanged():
@@ -133,4 +127,5 @@ class ListFrame(QFrame):
             duration=-1,
             parent=self,
             content=formatted_text,
+            tailPosition= TeachingTipTailPosition.LEFT
         )
