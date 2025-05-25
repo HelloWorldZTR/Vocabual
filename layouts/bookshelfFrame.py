@@ -57,17 +57,29 @@ class BookshelfFrame(QFrame):
         
 
         self.treedata = bookdata.get_book_tree()
+        current_selected_item = None
         for item in self.treedata:
             book_item = QTreeWidgetItem(self.treeview)
             book_item.setText(0, self.treedata[item]['title'])
             book_item.setData(0, Qt.UserRole, item)
+
+            if settings.settings['book_id'] == item:
+                current_selected_item = book_item
+            
             for child in self.treedata[item]['children']:
                 child_item = QTreeWidgetItem(book_item)
                 child_item.setText(0, self.treedata[item]['children'][child]['title'])
                 child_item.setData(0, Qt.UserRole, child)
                 # 这里可以添加更多的子节点或属性
                 book_item.addChild(child_item)
+
+                if settings.settings['book_id'] == child:
+                    current_selected_item = child_item
         
+        if current_selected_item is not None:
+            self.treeview.setCurrentItem(current_selected_item)
+            self.on_item_clicked(current_selected_item, 0)
+
         self.treeview.expandAll()
         self.treeview.itemClicked.connect(self.on_item_clicked)
         self.preview.selectBtn.clicked.connect(self.select_book)
