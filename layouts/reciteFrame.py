@@ -2,18 +2,25 @@ from utils.uitools import FrameWrapper
 from .Ui_recite import Ui_Frame 
 from extern import webDict
 from utils.audio import PlaysoundPlayer
+import settings
 
 class ReciteFrame(FrameWrapper):
     """ 背单词界面初始化 """
     def __init__(self, parent=None, unique_name=None):
-        self.wordList = []
-        self.cur = -1
-        self.currentWord = 'abandon'
+        self.wordList = settings.get_todays_word_list()
+        self.currentWordIndex = 0
+        self.currentWord = self.wordList[self.currentWordIndex].word
+        self.currentTranslation = self.wordList[self.currentWordIndex].translation
+        self.pronounceUK = self.wordList[self.currentWordIndex].phonetic_uk
+        self.pronounceUS = self.wordList[self.currentWordIndex].phonetic_us
         self.player = PlaysoundPlayer()
         super().__init__(Ui_Frame(), parent=parent, unique_name=unique_name)
         self.frame.ok.hide()
         self.frame.notok.hide()
         self.frame.next.hide()
+        self.frame.pronounceLabel1.setText("[英]"+self.pronounceUK)
+        self.frame.pronounceLabel2.setText("[美]"+self.pronounceUS)
+        self.frame.wordLabel.setText(self.currentWord)
 
     """不同按钮"""
     def switch_knownButton(self):
@@ -21,14 +28,12 @@ class ReciteFrame(FrameWrapper):
         self.frame.unknownButton.hide()
         self.frame.ok.show()
         self.frame.notok.show()
-        self.frame.explanationLabel.setText("v.放弃；抛弃；废弃；遗弃\n"
-"n.放肆；狂热；任性；恣意任性")
+        self.frame.explanationLabel.setText(self.currentTranslation)
     def switch_unknownButton(self):
         self.frame.knownButton.hide()
         self.frame.unknownButton.hide()
         self.frame.next.show()
-        self.frame.explanationLabel.setText("v.放弃；抛弃；废弃；遗弃\n"
-"n.放肆；狂热；任性；恣意任性")
+        self.frame.explanationLabel.setText(self.currentTranslation)
     def switch_ok(self):
         self.frame.ok.hide()
         self.frame.notok.hide()
@@ -43,11 +48,21 @@ class ReciteFrame(FrameWrapper):
         self.frame.next.hide()
         self.frame.knownButton.show()
         self.frame.unknownButton.show()
-        self.frame.explanationLabel.setText("下一个")
+        self.currentWordIndex += 1
+        if self.currentWordIndex >= len(self.wordList):
+            self.currentWordIndex = 0
+        self.currentWord = self.wordList[self.currentWordIndex].word
+        self.currentTranslation = self.wordList[self.currentWordIndex].translation
+        self.pronounceUK = self.wordList[self.currentWordIndex].phonetic_uk
+        self.pronounceUS = self.wordList[self.currentWordIndex].phonetic_us
+        self.player = PlaysoundPlayer()
+        self.frame.pronounceLabel1.setText("[英]"+self.pronounceUK)
+        self.frame.pronounceLabel2.setText("[美]"+self.pronounceUS)
+        self.frame.wordLabel.setText(self.currentWord)
+        self.frame.explanationLabel.setText('')
     """连接信号和槽函数"""
     def setupConnections(self):
         self.frame.favouriteButton.clicked.connect(lambda: self.logEvent('添加到收藏夹'))
-        #self.frame.knownButton.clicked.connect(lambda: self.frame.wordLabel.setText('Banana'))
         self.frame.knownButton.clicked.connect(lambda: self.switch_knownButton())
         self.frame.unknownButton.clicked.connect(lambda: self.switch_unknownButton())
         self.frame.ok.clicked.connect(lambda: self.switch_ok())
