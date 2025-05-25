@@ -23,52 +23,23 @@ class ReviewFrame(FrameWrapper):
         self.currentWord = self.wordList[self.currentWordIndex].word
         self.currentTranslation = self.wordList[self.currentWordIndex].translation
         self.stage=random.randint(0, 1)
-        self.translate=random.randint(1,4)
+        self.answer=random.randint(1,4)
+        self.buttons = [None, self.frame.A, self.frame.B, self.frame.C, self.frame.D]
         super().__init__(Ui_Frame(), parent=parent, unique_name=unique_name)
         if self.stage == 0:
             self.frame.wordLabel_2.setText(self.currentWord)
-            if self.translate == 1:
-                self.frame.A.setText(self.currentTranslation)
-                self.frame.B.setText((random.choice(self.otherWordList)).translation)
-                self.frame.C.setText((random.choice(self.otherWordList)).translation)
-                self.frame.D.setText((random.choice(self.otherWordList)).translation)
-            elif self.translate == 2:
-                self.frame.A.setText((random.choice(self.otherWordList)).translation)
-                self.frame.B.setText(self.currentTranslation)
-                self.frame.C.setText((random.choice(self.otherWordList)).translation)
-                self.frame.D.setText((random.choice(self.otherWordList)).translation)
-            elif self.translate == 3:
-                self.frame.A.setText((random.choice(self.otherWordList)).translation)
-                self.frame.B.setText((random.choice(self.otherWordList)).translation)
-                self.frame.C.setText(self.currentTranslation)
-                self.frame.D.setText((random.choice(self.otherWordList)).translation)
-            else:
-                self.frame.A.setText((random.choice(self.otherWordList)).translation)
-                self.frame.B.setText((random.choice(self.otherWordList)).translation)
-                self.frame.C.setText((random.choice(self.otherWordList)).translation)
-                self.frame.D.setText(self.currentTranslation)
+            for i in range(1, 5):
+                if i == self.answer:
+                    self.buttons[i].setText(self.currentTranslation)
+                else:
+                    self.buttons[i].setText((random.choice(self.otherWordList)).translation)
         else:
             self.frame.wordLabel_2.setText(self.currentTranslation)
-            if self.translate == 1:
-                self.frame.A.setText(self.currentWord)
-                self.frame.B.setText((random.choice(self.otherWordList)).word)
-                self.frame.C.setText((random.choice(self.otherWordList)).word)
-                self.frame.D.setText((random.choice(self.otherWordList)).word)
-            elif self.translate == 2:
-                self.frame.A.setText((random.choice(self.otherWordList)).word)
-                self.frame.B.setText(self.currentWord)
-                self.frame.C.setText((random.choice(self.otherWordList)).word)
-                self.frame.D.setText((random.choice(self.otherWordList)).word)
-            elif self.translate == 3:
-                self.frame.A.setText((random.choice(self.otherWordList)).word)
-                self.frame.B.setText((random.choice(self.otherWordList)).word)
-                self.frame.C.setText(self.currentWord)
-                self.frame.D.setText((random.choice(self.otherWordList)).word)
-            else:
-                self.frame.A.setText((random.choice(self.otherWordList)).word)
-                self.frame.B.setText((random.choice(self.otherWordList)).word)
-                self.frame.C.setText((random.choice(self.otherWordList)).word)
-                self.frame.D.setText(self.currentWord)
+            for i in range(1, 5):
+                if i == self.answer:
+                    self.buttons[i].setText(self.currentWord)
+                else:
+                    self.buttons[i].setText((random.choice(self.otherWordList)).word)
     """下一个单词"""
     def nextWord(self):
         self.resetButton()
@@ -80,51 +51,21 @@ class ReviewFrame(FrameWrapper):
             self.currentWord = self.wordList[self.currentWordIndex].word
             self.currentTranslation = self.wordList[self.currentWordIndex].translation
             self.stage=random.randint(0, 1)
-            self.translate=random.randint(1,4)
+            self.answer=random.randint(1,4)
             if self.stage == 0:
                 self.frame.wordLabel_2.setText(self.currentWord)
-                if self.translate == 1:
-                    self.frame.A.setText(self.currentTranslation)
-                    self.frame.B.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.C.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.D.setText((random.choice(self.otherWordList)).translation)
-                elif self.translate == 2:
-                    self.frame.A.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.B.setText(self.currentTranslation)
-                    self.frame.C.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.D.setText((random.choice(self.otherWordList)).translation)
-                elif self.translate == 3:
-                    self.frame.A.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.B.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.C.setText(self.currentTranslation)
-                    self.frame.D.setText((random.choice(self.otherWordList)).translation)
-                else:
-                    self.frame.A.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.B.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.C.setText((random.choice(self.otherWordList)).translation)
-                    self.frame.D.setText(self.currentTranslation)
+                for i in range(1, 5):
+                    if i == self.answer:
+                        self.buttons[i].setText(self.currentTranslation)
+                    else:
+                        self.buttons[i].setText((random.choice(self.otherWordList)).translation)
             else:
                 self.frame.wordLabel_2.setText(self.currentTranslation)
-                if self.translate == 1:
-                    self.frame.A.setText(self.currentWord)
-                    self.frame.B.setText((random.choice(self.otherWordList)).word)
-                    self.frame.C.setText((random.choice(self.otherWordList)).word)
-                    self.frame.D.setText((random.choice(self.otherWordList)).word)
-                elif self.translate == 2:
-                    self.frame.A.setText((random.choice(self.otherWordList)).word)
-                    self.frame.B.setText(self.currentWord)
-                    self.frame.C.setText((random.choice(self.otherWordList)).word)
-                    self.frame.D.setText((random.choice(self.otherWordList)).word)
-                elif self.translate == 3:
-                    self.frame.A.setText((random.choice(self.otherWordList)).word)
-                    self.frame.B.setText((random.choice(self.otherWordList)).word)
-                    self.frame.C.setText(self.currentWord)
-                    self.frame.D.setText((random.choice(self.otherWordList)).word)
-                else:
-                    self.frame.A.setText((random.choice(self.otherWordList)).word)
-                    self.frame.B.setText((random.choice(self.otherWordList)).word)
-                    self.frame.C.setText((random.choice(self.otherWordList)).word)
-                    self.frame.D.setText(self.currentWord)
+                for i in range(1, 5):
+                    if i == self.answer:
+                        self.buttons[i].setText(self.currentWord)
+                    else:
+                        self.buttons[i].setText((random.choice(self.otherWordList)).word)
     """还原按钮"""
     def resetButton(self):
         """还原按钮颜色"""
@@ -134,58 +75,58 @@ class ReviewFrame(FrameWrapper):
         self.frame.D.setStyleSheet("background-color: rgb(255, 255, 255);")
     """不同按钮"""
     def A(self):
-        if self.translate == 1:
+        if self.answer == 1:
             self.frame.A.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 2:
+        elif self.answer == 2:
             self.frame.A.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.B.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 3:
+        elif self.answer == 3:
             self.frame.A.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.C.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 4:
+        elif self.answer == 4:
             self.frame.A.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.D.setStyleSheet("background-color: rgb(0, 255, 0);")
         #QTimer.singleShot(5000)
         QTimer.singleShot(5000, self.nextWord)
         
     def B(self):
-        if self.translate == 1:
+        if self.answer == 1:
             self.frame.B.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 2:
+        elif self.answer == 2:
             self.frame.B.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.A.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 3:
+        elif self.answer == 3:
             self.frame.B.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.D.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 4:
+        elif self.answer == 4:
             self.frame.B.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.C.setStyleSheet("background-color: rgb(0, 255, 0);")
         #QTimer.singleShot(5000)
         QTimer.singleShot(5000, self.nextWord)
     def C(self):
-        if self.translate == 1:
+        if self.answer == 1:
             self.frame.C.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 2:
+        elif self.answer == 2:
             self.frame.C.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.D.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 3:
+        elif self.answer == 3:
             self.frame.C.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.A.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 4:
+        elif self.answer == 4:
             self.frame.C.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.B.setStyleSheet("background-color: rgb(0, 255, 0);")
         #QTimer.singleShot(5000)
         QTimer.singleShot(5000, self.nextWord)
     def D(self):
-        if self.translate == 1:
+        if self.answer == 1:
             self.frame.D.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 2:
+        elif self.answer == 2:
             self.frame.D.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.C.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 3:
+        elif self.answer == 3:
             self.frame.D.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.B.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif self.translate == 4:
+        elif self.answer == 4:
             self.frame.D.setStyleSheet("background-color: rgb(255, 0, 0);")
             self.frame.A.setStyleSheet("background-color: rgb(0, 255, 0);")
         #QTimer.singleShot(5000)
