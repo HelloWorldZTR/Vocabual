@@ -107,12 +107,17 @@ def get_book_tree():
         for _, row in book_df.iterrows():
             book_id = row['bk_id']
             book_title = row['bk_name']
-            if row['bk_parent_id'] == 0:
-                book_tree[book_id] = {
-                    'title': book_title,
-                    'children': {},
-                    'id': book_id
-                }
+            if row['bk_parent_id'] == '0':
+                if book_id not in book_tree:
+                    book_tree[book_id] = {
+                        'title': book_title,
+                        'children': {},
+                        'id': book_id
+                    }
+                else:
+                    # 如果书籍ID已存在，更新标题
+                    book_tree[book_id]['title'] = book_title
+                    book_tree[book_id]['id'] = book_id
             else:
                 parent_id = row['bk_parent_id']
                 if parent_id in book_tree:
