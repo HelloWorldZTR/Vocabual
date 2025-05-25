@@ -1,5 +1,6 @@
 import os
 import json
+import bookdata
 
 path = "settings.json"
 path = os.path.join(os.path.dirname(__file__), path)
@@ -13,10 +14,11 @@ class Settings:
             self.load_default_settings()
             self.save_settings()
     def load_default_settings(self):
-        self.book_id = None
+        self.book_id = '45c48cce2e2d7fbdea1afc51'
         self.word_cnt = 0
         self.daily_word_cnt = 30
         self.learned = []
+        self.favourite = []
     def load_settings(self):
         with open(path, "r", encoding="utf-8") as f:
             self.settings = json.load(f)
@@ -33,3 +35,5 @@ class Settings:
         }
         with open(path, "w", encoding="utf-8") as f:
             json.dump(self.settings, f, ensure_ascii=False, indent=4)
+
+print(bookdata.books.keys())

@@ -1,8 +1,27 @@
 import pandas as pd
 import os
-from word import Word
-from book import Book
 
+
+class Word:
+    def __init__(self, id, word, phonetic_uk, phonetic_us,difficulty,translation):
+        self.id = id
+        self.word = word
+        self.phonetic_uk = phonetic_uk
+        self.phonetic_us = phonetic_us
+        self.difficulty = difficulty
+        self.translation = translation
+        self.relation_book_word_id_list = []
+        self.book_list = []
+
+class Book:
+    def __init__(self, id, title, word_count):
+        self.id = id
+        self.title = title
+        self.word_count = word_count
+        self.relation_book_word_id_list = []
+        self.word_list = []
+
+        
 def get_root_dir():
     """获取项目根目录"""
     return os.path.dirname(os.path.abspath(__file__))
