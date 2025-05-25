@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import time
+import json
 
 class Word:
     def __init__(self, id, word, phonetic_uk, phonetic_us,difficulty,translation):
@@ -94,6 +95,49 @@ def build_relationships(relation_df, word_dict, book_dict):
             # 双向添加关系（不存储关系ID）
             book.word_list.append(word_id)
             # word.book_list.append(book)
+
+def get_book_tree():
+    json_path = os.path.join(get_root_dir(), 'book_tree.json')
+    if os.path.exists(json_path):
+        with open(json_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    else :
+        book_df = pd.read_csv(os.path.join(get_root_dir(), 'DictionaryData', 'book.csv'), sep=">")
+        book_tree = {}
+        for _, row in book_df.iterrows():
+            book_id = row['bk_id']
+            book_title = row['bk_name']
+            if row['bk_parent_id'] == 0:
+                book_tree[book_id] = {
+                    'title': book_title,
+                    'children': {},
+                    'id': book_id
+                }
+            else:
+                parent_id = row['bk_parent_id']
+                if parent_id in book_tree:
+                    book_tree[parent_id]['children'][book_id] = {
+                        'title': book_title,
+                        'children': {},
+                        'id': book_id
+                    }
+                else:
+                    # 如果父节点不存在，创建一个新的父节点
+                    book_tree[parent_id] = {
+                        'title': f"Unknown Parent {parent_id}",
+                        'children': {
+                            book_id: {
+                                'title': book_title,
+                                'children': {},
+                                'id': book_id
+                            }
+                        }
+                    }
+        # 保存到JSON文件
+        with open(json_path, 'w', encoding='utf-8') as f:
+            json.dump(book_tree, f, ensure_ascii=False, indent=4)
+        return book_tree
+
 
 def init_system():
     """
