@@ -54,6 +54,13 @@ def add_favourite(word_id):
         settings['favourite'].append(word_id)
         _save_settings()
 
+def remove_favourite(word_id):
+    """从收藏夹中移除单词"""
+    assert word_id in bookdata.words, f"Word ID {word_id} does not exist in bookdata."
+    if word_id in settings['favourite']:
+        settings['favourite'].remove(word_id)
+        _save_settings()
+
 def _id_to_word(word_id):
     """将单词ID转换为单词对象"""
     if word_id in bookdata.words:

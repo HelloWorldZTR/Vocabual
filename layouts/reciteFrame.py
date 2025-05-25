@@ -26,9 +26,13 @@ class ReciteFrame(FrameWrapper):
         self.frame.wordLabel.setText(self.currentWord)
         self.frame.progressBar.setProperty('value', 0)
         if settings.get_favourite_status(self.wordList[self.currentWordIndex].id):
-            self.frame.favouriteButton.checked = True
+            self.frame.favouriteButton.blockSignals(True)  # 阻止信号触发
+            self.frame.favouriteButton.setChecked(True)
+            self.frame.favouriteButton.blockSignals(False)
         else:
-            self.frame.favouriteButton.checked = False
+            self.frame.favouriteButton.blockSignals(True)
+            self.frame.favouriteButton.setChecked(False)
+            self.frame.favouriteButton.blockSignals(False)
 
     """不同按钮"""
     def switch_knownButton(self):
@@ -58,6 +62,7 @@ class ReciteFrame(FrameWrapper):
         self.frame.next.hide()
         self.frame.knownButton.show()
         self.frame.unknownButton.show()
+        settings.set_learned(self.wordList[self.currentWordIndex].id)
         self.currentWordIndex += 1
         self.frame.progressBar.setProperty('value', self.currentWordIndex / len(self.wordList) * 100)
         self.logEvent(f'当前单词索引: {self.currentWordIndex}, 总单词数: {len(self.wordList)}')
@@ -85,9 +90,13 @@ class ReciteFrame(FrameWrapper):
             self.frame.wordLabel.setText(self.currentWord)
             self.frame.explanationLabel.setText('')
             if settings.get_favourite_status(self.wordList[self.currentWordIndex].id):
-                self.frame.favouriteButton.checked = True
+                self.frame.favouriteButton.blockSignals(True)
+                self.frame.favouriteButton.setChecked(True)
+                self.frame.favouriteButton.blockSignals(False)
             else:
+                self.frame.favouriteButton.blockSignals(True)
                 self.frame.favouriteButton.checked = False
+                self.frame.favouriteButton.blockSignals(False)
     """连接信号和槽函数"""
     def setupConnections(self):
         self.frame.favouriteButton.clicked.connect(lambda: self.addToFavourite())
@@ -105,9 +114,12 @@ class ReciteFrame(FrameWrapper):
     
     def addToFavourite(self):
         word = self.wordList[self.currentWordIndex]
-        self.logEvent('添加到收藏夹'+word.word)
-        settings.add_favourite(word.id)
-        self.frame.favouriteButton.checked = True
+        if not self.frame.favouriteButton.isChecked():
+            self.logEvent('从收藏夹中删除'+word.word)
+            settings.remove_favourite(word.id)
+        else:
+            self.logEvent('添加到收藏夹'+word.word)
+            settings.add_favourite(word.id)
 
     def pronounce(self, type:int):
         """
