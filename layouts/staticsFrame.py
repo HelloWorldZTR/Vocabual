@@ -8,6 +8,8 @@ from qfluentwidgets import ElevatedCardWidget, ProgressRing, BodyLabel, ImageLab
 import tempfile
 import os
 import datetime
+import settings
+import bookdata
 
 class StaticsFrame(QFrame):
     def __init__(self, parent, unique_name):
@@ -42,19 +44,10 @@ class StaticsFrame(QFrame):
         data = [((startDate + datetime.timedelta(days=i)).strftime("%Y-%m-%d"), random.randint(0, 100)) for i in range((endDate - startDate).days + 1)]
         self.setCalendarInfo(data, startDate, endDate)
 
-        self.setInfo("小学英语", 114514, 111199)
-
         date = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
         learned = [(date[i], random.randint(0, 100)) for i in range(7)]
         reviewed = [(date[i], random.randint(0, 100)) for i in range(7)]
         self.setKLineInfo(learned, reviewed)
-    
-    def setInfo(self, bookname:str, wordcount:int, learned:int):
-        """
-        设置信息栏
-        wordcount 为总单词数量
-        """
-        self.prog.setInfo(bookname, wordcount, learned)
 
     def setCalendarInfo(self, data, beginDate, endDate):
         """
@@ -74,30 +67,39 @@ class StaticsFrame(QFrame):
         self.kline.createChart(learned, reviewed)
     
     def updateWindow(self):
-        pass
+        bookname = settings.settings['book_id']
+        if bookname is None:
+            bookname = "未选择书籍"
+        else:
+            bookname = bookdata.books[settings.settings['book_id']].title
+        wordcount = settings.settings['word_cnt']
+        learned = len(settings.settings['learned'])
+
+        self.prog.setInfo(
+            bookname, wordcount, learned, f'单词数量: {learned}/{wordcount}\n 每日学习: {settings.settings["daily_word_cnt"]} 个单词\n '
+        )
 
 
 class ProgressRingCardWidget(ElevatedCardWidget):
     def __init__(self, parent=None, percentage = 0):
         super().__init__(parent)
 
-        self.setLayout(QVBoxLayout())
-        self.row1 = QHBoxLayout()
-        self.row2 = QHBoxLayout()
-        self.layout().addLayout(self.row1)
-        self.layout().addLayout(self.row2)
+        self.setLayout(QHBoxLayout())
+        # self.row1 = QHBoxLayout()
+        # self.layout().addLayout(self.row1)
 
-        self.header = TitleLabel(self)
-        self.header.setText("统计信息")
-        self.row1.addWidget(self.header)
-        self.row1.addItem(QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        # self.header = TitleLabel(self)
+        # self.header.setText("统计信息")
+        # self.row1.addWidget(self.header)
+        # self.row1.addItem(QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
         
         self.hspacer = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.prog = ProgressRing(self)
         self.prog.setRange(0, 100)
-        self.row2.addItem(self.hspacer)
-        self.row2.addWidget(self.prog)
-        self.row2.addItem(self.hspacer)
+        
+        self.layout().addItem(self.hspacer)
+        self.layout().addWidget(self.prog)
+        self.layout().addItem(self.hspacer)
 
         class _InfoWidget(QWidget):
             def __init__(self, parent=None):
@@ -117,10 +119,10 @@ class ProgressRingCardWidget(ElevatedCardWidget):
         # self.setInfo("小学英语", 114514, 111199)
 
     
-    def setInfo(self, bookName, wordCount, wordLearned):
+    def setInfo(self, bookName, wordCount, wordLearned, text):
         percentage = int(wordLearned / wordCount * 100)
         self.info.labelBookName.setText(bookName)
-        self.info.labelWordCount.setText(f'单词数量: {wordLearned}/{wordCount}')
+        self.info.labelWordCount.setText(text)
         self.prog.setValue(percentage)
     
     

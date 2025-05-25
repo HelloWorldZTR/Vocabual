@@ -62,6 +62,7 @@ class ReciteFrame(FrameWrapper):
         self.frame.next.hide()
         self.frame.knownButton.show()
         self.frame.unknownButton.show()
+        settings.set_learned(self.wordList[self.currentWordIndex].id)
         self.currentWordIndex += 1
         self.frame.progressBar.setProperty('value', self.currentWordIndex / len(self.wordList) * 100)
         self.logEvent(f'当前单词索引: {self.currentWordIndex}, 总单词数: {len(self.wordList)}')
