@@ -14,15 +14,9 @@
    <string>Frame</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">ainWindow {
-    background-image: url(file:///E:/VSwork/helloworld/Vocabual/layouts/648965794_cover.png);  /* 使用资源文件路径 */
-    background-repeat: no-repeat;  /* 不重复显示 */
-    background-position: center;  /* 居中显示 */
-    background-attachment: fixed;  /* 固定背景 */
-    background-origin: content;  /* 从内容区开始显示背景 */
-}</string>
+   <string notr="true"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
@@ -87,7 +81,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="wordLabel">
+      <widget class="QLabel" name="wordLabel_2">
        <property name="font">
         <font>
          <family>Cascadia Mono SemiBold</family>

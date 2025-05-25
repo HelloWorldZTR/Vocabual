@@ -15,15 +15,9 @@ class Ui_Frame(object):
     def setupUi(self, Frame):
         Frame.setObjectName("Frame")
         Frame.resize(768, 534)
-        Frame.setStyleSheet("ainWindow {\n"
-"    background-image: url(file:///E:/VSwork/helloworld/Vocabual/layouts/648965794_cover.png);  /* 使用资源文件路径 */\n"
-"    background-repeat: no-repeat;  /* 不重复显示 */\n"
-"    background-position: center;  /* 居中显示 */\n"
-"    background-attachment: fixed;  /* 固定背景 */\n"
-"    background-origin: content;  /* 从内容区开始显示背景 */\n"
-"}")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(Frame)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        Frame.setStyleSheet("")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(Frame)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -43,17 +37,17 @@ class Ui_Frame(object):
         spacerItem1 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.wordLabel = QtWidgets.QLabel(Frame)
+        self.wordLabel_2 = QtWidgets.QLabel(Frame)
         font = QtGui.QFont()
         font.setFamily("Cascadia Mono SemiBold")
         font.setPointSize(90)
         font.setBold(True)
         font.setWeight(75)
-        self.wordLabel.setFont(font)
-        self.wordLabel.setStyleSheet("")
-        self.wordLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.wordLabel.setObjectName("wordLabel")
-        self.verticalLayout.addWidget(self.wordLabel)
+        self.wordLabel_2.setFont(font)
+        self.wordLabel_2.setStyleSheet("")
+        self.wordLabel_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.wordLabel_2.setObjectName("wordLabel_2")
+        self.verticalLayout.addWidget(self.wordLabel_2)
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -98,7 +92,7 @@ class Ui_Frame(object):
         spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem7)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
-        self.verticalLayout_3.addLayout(self.verticalLayout)
+        self.verticalLayout_2.addLayout(self.verticalLayout)
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.label_4 = QtWidgets.QLabel(Frame)
@@ -108,7 +102,7 @@ class Ui_Frame(object):
         self.progressBar.setProperty("value", 24)
         self.progressBar.setObjectName("progressBar")
         self.horizontalLayout_6.addWidget(self.progressBar)
-        self.verticalLayout_3.addLayout(self.horizontalLayout_6)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_6)
 
         self.retranslateUi(Frame)
         QtCore.QMetaObject.connectSlotsByName(Frame)
@@ -117,7 +111,7 @@ class Ui_Frame(object):
         _translate = QtCore.QCoreApplication.translate
         Frame.setWindowTitle(_translate("Frame", "Frame"))
         self.favouriteButton.setText(_translate("Frame", "⭐"))
-        self.wordLabel.setText(_translate("Frame", "abandon"))
+        self.wordLabel_2.setText(_translate("Frame", "abandon"))
         self.knownButton_3.setText(_translate("Frame", "认识"))
         self.unknownButton_3.setText(_translate("Frame", "不认识"))
         self.knownButton_2.setText(_translate("Frame", "认识"))
