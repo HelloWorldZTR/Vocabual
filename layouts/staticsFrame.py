@@ -72,6 +72,9 @@ class StaticsFrame(QFrame):
         reviewed: 复习数据
         """
         self.kline.createChart(learned, reviewed)
+    
+    def updateWindow(self):
+        pass
 
 
 class ProgressRingCardWidget(ElevatedCardWidget):

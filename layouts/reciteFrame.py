@@ -38,6 +38,7 @@ class ReciteFrame(FrameWrapper):
         self.frame.notok.show()
         self.frame.explanationLabel.setText(self.currentTranslation)
     def switch_unknownButton(self):
+        self.addToFavourite()
         self.frame.knownButton.hide()
         self.frame.unknownButton.hide()
         self.frame.next.show()
@@ -47,6 +48,7 @@ class ReciteFrame(FrameWrapper):
         self.frame.notok.hide()
         self.frame.next.show()
     def switch_notok(self):
+        self.addToFavourite()
         self.frame.ok.hide()
         self.frame.notok.hide()
         self.frame.next.show()
@@ -123,3 +125,5 @@ class ReciteFrame(FrameWrapper):
         else:
             self.logEvent('发音查询失败')
         
+    def updateWindow(self):
+        pass

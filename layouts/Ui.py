@@ -25,6 +25,9 @@ class MainWindow(FluentWindow):
         self.initNavigation()
         self.initWindow()
 
+        self.stackedWidget.currentChanged.connect(lambda: self.stackedWidget.currentWidget().updateWindow())
+
+
     def initNavigation(self):
         # 设置导航栏的标题和图标
         self.addSubInterface(self.reciteInterface, FIF.HOME, '背单词', NavigationItemPosition.TOP)

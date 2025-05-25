@@ -105,3 +105,6 @@ class BookshelfFrame(QFrame):
     def select_book(self):
         print("[log] Selected book ID:", self.selected_book_id)
         settings.set_book_id(self.selected_book_id)
+    
+    def updateWindow(self):
+        pass
