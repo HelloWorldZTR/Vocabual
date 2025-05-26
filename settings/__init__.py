@@ -28,6 +28,7 @@ def _load_settings():
     settings['daily_record'] = settings.get("daily_record", {})
     settings['daily_review_record'] = settings.get("daily_review_record", {})
     settings['favourite'] = settings.get("favourite", [])
+
 def _save_settings():
     with open(path, "w", encoding="utf-8") as f:
         json.dump(settings, f, ensure_ascii=False, indent=4)

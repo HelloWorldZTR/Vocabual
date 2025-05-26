@@ -11,7 +11,7 @@ import re
 
 def getMaskedText(text, mask_char='_'):
     # 要保留的词性词（支持多种词性）
-    return '_'* len(text)  # 简单的实现，直接将文本全部替换为下划线
+    return mask_char* len(text)  # 简单的实现，直接将文本全部替换为下划线
     # pos_tags = ['n.', 'v.', 'adj.', 'adv.', 'pron.', 'prep.', 'conj.', 'interj.', 'a.', 'vt.', 'vi.']
  
     # # 占位替换表
@@ -149,7 +149,7 @@ class ReciteFrame(FrameWrapper):
                 self.frame.favouriteButton.blockSignals(False)
             else:
                 self.frame.favouriteButton.blockSignals(True)
-                self.frame.favouriteButton.checked = False
+                self.frame.favouriteButton.setChecked(False)
                 self.frame.favouriteButton.blockSignals(False)
     """连接信号和槽函数"""
     def setupConnections(self):
