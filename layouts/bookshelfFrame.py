@@ -15,7 +15,7 @@ from qfluentwidgets import (
 )
 from qfluentwidgets import FluentIcon, TreeWidget
 
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QVBoxLayout, QSizePolicy, QSpacerItem, QTreeWidgetItem
+from PyQt5.QtWidgets import QHBoxLayout, QFrame, QVBoxLayout, QSizePolicy, QSpacerItem, QTreeWidgetItem, QCompleter
 from PyQt5.QtCore import Qt
 
 import bookdata
@@ -46,9 +46,17 @@ class BookshelfFrame(QFrame):
         self.setObjectName(unique_name)
 
         self.setLayout(QHBoxLayout())
+        self.column1 = QVBoxLayout()
+        self.layout().addLayout(self.column1)
+
+        # Column 1: Tree View
+        self.lineEdit = SearchLineEdit(self)
 
         self.treeview = TreeWidget(self)
-        self.layout().addWidget(self.treeview)
+        self.column1.addWidget(self.treeview)
+        self.column1.addWidget(self.lineEdit)
+
+        # Column 2: Preview Card
         self.preview = PrevirewCard(self)
         self.layout().addWidget(self.preview)
         self.treeview.setHeaderHidden(True)
@@ -57,6 +65,7 @@ class BookshelfFrame(QFrame):
         
 
         self.treedata = bookdata.get_book_tree()
+        self.searcchdata = {}
         current_selected_item = None
         for item in self.treedata:
             book_item = QTreeWidgetItem(self.treeview)
@@ -72,6 +81,7 @@ class BookshelfFrame(QFrame):
                 child_item.setData(0, Qt.UserRole, child)
                 # 这里可以添加更多的子节点或属性9
                 book_item.addChild(child_item)
+                self.searcchdata[self.treedata[item]['children'][child]['title']] = child_item
 
                 if settings.settings['book_id'] == child:
                     current_selected_item = child_item
@@ -80,11 +90,41 @@ class BookshelfFrame(QFrame):
             self.treeview.setCurrentItem(current_selected_item)
             self.on_item_clicked(current_selected_item, 0)
 
+        self.completer = QCompleter(self.searcchdata.keys(), self)
+        self.completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self.completer.setMaxVisibleItems(10)
+        self.lineEdit.setCompleter(self.completer)
+        self.lineEdit.setPlaceholderText("输入以搜索书籍...")
+
         self.treeview.expandAll()
+
         self.treeview.itemClicked.connect(self.on_item_clicked)
         self.preview.selectBtn.clicked.connect(self.select_book)
+        self.lineEdit.searchSignal.connect(self.on_search)
+        self.lineEdit.textChanged.connect(self.on_text_changed)
         # print(self.treedata)
     
+    def _find_closest_match(self, text):
+        min_lexical_distance = float('inf')
+        closest_match = None
+        for item in self.searcchdata.keys():
+            distance = self._lexical_distance(text, item)
+            if distance < min_lexical_distance:
+                min_lexical_distance = distance
+                closest_match = item
+        return closest_match
+
+    def _lexical_distance(self, str1, str2):
+        return sum(1 for a, b in zip(str1, str2) if a != b) + abs(len(str1) - len(str2))
+
+    def on_text_changed(self, text):
+        if text:
+            closest_match = self._find_closest_match(text)
+            if closest_match:
+                item = self.searcchdata.get(closest_match)
+                self.treeview.setCurrentItem(item)
+                self.on_item_clicked(item, 0)
+
     def on_item_clicked(self, item, column):
         """
         当树形视图中的项目被点击时，更新预览卡片的内容。
@@ -100,8 +140,19 @@ class BookshelfFrame(QFrame):
 单词量: {word_count}\n""".format(book_id=book_id, word_count=book.word_count)
         )
         self.selected_book_id = book_id
-        print("[log] Select" + book.title)
+        print("[log] Select:" + book.title)
     
+    def on_search(self, text):
+        print("[log] Search:", text)
+        if text:
+            item = self.searcchdata.get(text)
+            if item:
+                self.treeview.setCurrentItem(item)
+                self.on_item_clicked(item, 0)
+            else:
+                print("[log] No book found for search:", text)
+        
+
     def select_book(self):
         print("[log] Selected book ID:", self.selected_book_id)
         settings.set_book_id(self.selected_book_id)
