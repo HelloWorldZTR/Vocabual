@@ -3,7 +3,7 @@ from qfluentwidgets import Dialog
 from utils.uitools import FrameWrapper
 from .Ui_recite import Ui_Frame 
 from extern import webDict
-from utils.audio import PlaysoundPlayer
+from utils.audio import AudioPlayer
 import re
 import settings
 
@@ -69,7 +69,7 @@ class ReciteFrame(FrameWrapper):
         self.currentTranslation = self.wordList[self.currentWordIndex].translation
         self.pronounceUK = self.wordList[self.currentWordIndex].phonetic_uk
         self.pronounceUS = self.wordList[self.currentWordIndex].phonetic_us
-        self.player = PlaysoundPlayer()
+        self.player = AudioPlayer()
         super().__init__(Ui_Frame(), parent=parent, unique_name=unique_name)
         self.frame.ok.hide()
         self.frame.notok.hide()
@@ -159,8 +159,8 @@ class ReciteFrame(FrameWrapper):
         self.frame.ok.clicked.connect(lambda: self.switch_ok())
         self.frame.notok.clicked.connect(lambda: self.switch_notok())
         self.frame.next.clicked.connect(lambda: self.switch_next())
-        self.frame.pronBtn1.clicked.connect(lambda: self.pronounce(0))  # 英式发音按钮
-        self.frame.pronBtn2.clicked.connect(lambda: self.pronounce(1))  # 美式发音按钮
+        self.frame.pronBtn1.clicked.connect(lambda: self.pronounce(1))  # 英式发音按钮
+        self.frame.pronBtn2.clicked.connect(lambda: self.pronounce(0))  # 美式发音按钮
 
     
     def logEvent(self, text):
@@ -184,14 +184,14 @@ class ReciteFrame(FrameWrapper):
         发音按钮点击事件
         type: 0 - 英式发音, 1 - 美式发音
         """
-        if type == 0:
-            self.logEvent('英式发音按钮被点击')
-        elif type == 1:
-            self.logEvent('美式发音按钮被点击')
+        # if type == 0:
+        #     self.logEvent('英式发音按钮被点击')
+        # elif type == 1:
+        #     self.logEvent('美式发音按钮被点击')
         
-        bytes = webDict.query_spelling(self.currentWord, type)
-        if bytes:
-            self.player.play_raw(bytes)
+        file = webDict.query_spelling(self.currentWord, type)
+        if file:
+            self.player.play(file)
         else:
             self.logEvent('发音查询失败')
         

@@ -1,5 +1,7 @@
+import urllib.request
 import requests
 import tempfile
+import urllib
 
 """
 Functions to query web dictionaries.
@@ -36,7 +38,7 @@ def query_youdao(word) -> list:
         pic = None
     return (expl, phrs_list, pic)
 
-def query_spelling(word:str, type:int=0) -> bytes:
+def query_spelling(word:str, type:int=0) -> tempfile.NamedTemporaryFile:
     """
     查询单词的发音
     type: 0 - 英式发音, 1 - 美式发音
@@ -45,11 +47,13 @@ def query_spelling(word:str, type:int=0) -> bytes:
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
-    res = requests.get(url, headers=headers)
-
-    if res.status_code == 200:
-        return res.content
-    else:
-        return None
-
+    temp = tempfile.NamedTemporaryFile(delete=False, suffix='.mp3')
+    try:
+        urllib.request.urlretrieve(url, temp.name)
+        return temp.name
+    except Exception as e:
+        print(f"[Error] An error occurred while fetching audio for {word}: {e}")
+    
+# print(query_spelling("abandon", 0))  # 英式发音
+# print(query_spelling("abandon", 1))  # 美式发音
 # print(query_youdao("abandon"))  # ['放弃；遗弃；离弃']
