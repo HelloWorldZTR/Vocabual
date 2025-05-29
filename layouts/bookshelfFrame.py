@@ -11,11 +11,13 @@ from qfluentwidgets import (
     SimpleCardWidget,
     TitleLabel,
     ImageLabel,
-    PillPushButton
+    PillPushButton,
+    TableWidget,
+    CompactSpinBox,
 )
 from qfluentwidgets import FluentIcon, TreeWidget
 
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QVBoxLayout, QSizePolicy, QSpacerItem, QTreeWidgetItem, QCompleter
+from PyQt5.QtWidgets import QHBoxLayout, QFrame, QVBoxLayout, QSizePolicy, QSpacerItem, QTreeWidgetItem, QCompleter, QTableWidgetItem, QHeaderView
 from PyQt5.QtCore import Qt
 
 import bookdata
@@ -34,10 +36,24 @@ class PrevirewCard(SimpleCardWidget):
         self.infoLabel = BodyLabel("书籍简介", self)
         self.infoLabel.setText("请从左侧选择一本书籍以查看详细信息。")
         self.infoLabel.setAlignment(Qt.AlignLeft)
+        self.wordTabel = TableWidget(self)
+        self.wordTabel.setColumnCount(2)
+        self.wordTabel.horizontalHeader().hide()
+        self.wordTabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.wordTabel.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+
+        self.dailyWordCountLabel = BodyLabel("每日单词量:", self)
+        self.dailyWordCount = CompactSpinBox(self)
+        self.dailyWordCount.setRange(1, 1000)
+        self.dailyWordCount.setValue(30)
+
         self.selectBtn = PrimaryPushButton("选择该书", self)
 
         self.layout().addWidget(self.bookTitle)
         self.layout().addWidget(self.infoLabel)
+        self.layout().addWidget(self.wordTabel)
+        self.layout().addWidget(self.dailyWordCountLabel)
+        self.layout().addWidget(self.dailyWordCount)
         self.layout().addWidget(self.selectBtn)
 
 class BookshelfFrame(QFrame):
@@ -53,8 +69,8 @@ class BookshelfFrame(QFrame):
         self.lineEdit = SearchLineEdit(self)
 
         self.treeview = TreeWidget(self)
-        self.column1.addWidget(self.treeview)
         self.column1.addWidget(self.lineEdit)
+        self.column1.addWidget(self.treeview)
 
         # Column 2: Preview Card
         self.preview = PrevirewCard(self)
@@ -139,6 +155,13 @@ class BookshelfFrame(QFrame):
 """书籍ID: {book_id}\n
 单词量: {word_count}\n""".format(book_id=book_id, word_count=book.word_count)
         )
+        self.preview.wordTabel.clear()
+        word_list = bookdata.books[book_id].word_list
+        word_list = [settings._id_to_word(word) for word in word_list]
+        self.preview.wordTabel.setRowCount(len(word_list))
+        for i, word in enumerate(word_list):
+            self.preview.wordTabel.setItem(i, 0, QTableWidgetItem(word.word))
+            self.preview.wordTabel.setItem(i, 1, QTableWidgetItem(word.translation))
         self.selected_book_id = book_id
         print("[log] Select:" + book.title)
     
@@ -156,6 +179,8 @@ class BookshelfFrame(QFrame):
     def select_book(self):
         print("[log] Selected book ID:", self.selected_book_id)
         settings.set_book_id(self.selected_book_id)
+        daily_word_count = self.preview.dailyWordCount.value()
+        settings.set_daily_word_count(daily_word_count)
     
     def updateWindow(self):
         pass

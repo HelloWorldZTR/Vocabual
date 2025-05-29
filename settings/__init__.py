@@ -51,6 +51,15 @@ def set_book_id(book_id):
     settings['unlearned'] = list(bookdata.books[book_id].word_list)
     _save_settings()
 
+def set_daily_word_count(count):
+    """设置每日学习单词数量"""
+    if count < 1:
+        raise ValueError("Daily word count must be at least 1.")
+    if not isinstance(count, int):
+        raise TypeError("Daily word count must be an integer.")
+    settings['daily_word_cnt'] = count
+    _save_settings()
+
 def add_favourite(word_id):
     """将单词添加到收藏夹"""
     assert word_id in bookdata.words, f"Word ID {word_id} does not exist in bookdata."

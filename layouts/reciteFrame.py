@@ -196,4 +196,25 @@ class ReciteFrame(FrameWrapper):
             self.logEvent('发音查询失败')
         
     def updateWindow(self):
-        pass
+        self.wordList = settings.get_todays_word_list()
+        self.currentWordIndex = 0
+        self.currentWord = self.wordList[self.currentWordIndex].word
+        self.currentTranslation = self.wordList[self.currentWordIndex].translation
+        self.pronounceUK = self.wordList[self.currentWordIndex].phonetic_uk
+        self.pronounceUS = self.wordList[self.currentWordIndex].phonetic_us
+        self.frame.ok.hide()
+        self.frame.notok.hide()
+        self.frame.next.hide()
+        self.frame.pronounceLabel1.setText("[英]"+self.pronounceUK)
+        self.frame.pronounceLabel2.setText("[美]"+self.pronounceUS)
+        self.frame.wordLabel.setText(self.currentWord)
+        self.frame.progressBar.setProperty('value', 0)
+        self.frame.explanationLabel.setText(getMaskedText(self.currentTranslation))
+        if settings.get_favourite_status(self.wordList[self.currentWordIndex].id):
+            self.frame.favouriteButton.blockSignals(True)  # 阻止信号触发
+            self.frame.favouriteButton.setChecked(True)
+            self.frame.favouriteButton.blockSignals(False)
+        else:
+            self.frame.favouriteButton.blockSignals(True)
+            self.frame.favouriteButton.setChecked(False)
+            self.frame.favouriteButton.blockSignals(False)
