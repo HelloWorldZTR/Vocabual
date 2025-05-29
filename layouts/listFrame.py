@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QSizePolicy,
     QHeaderView,
+    QLabel,
 )
 from extern import webDict
 from PyQt5.QtCore import Qt
@@ -122,10 +123,15 @@ class ListFrame(QFrame):
 
     def showTeachingTip(self, target):
         expl, phrs, pic = webDict.query_youdao(target.text())
+        max_length = 50
         formatted_text = ""
         if expl is not None:
             for id, it in enumerate(expl):
-                expl[id] = f"{id+1}. <b>{it}</b>"
+                it = it[0] if isinstance(it, list) else it
+                expl[id] = f"{it}"
+                if len(it) > max_length:
+                    expl[id] = it[:max_length] + "..."
+                expl[id] = f"<b>{id + 1}.</b> {expl[id]}"
             formatted_text = "<br>".join(expl)
         else :
             formatted_text = "未找到释义"

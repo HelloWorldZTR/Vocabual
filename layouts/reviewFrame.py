@@ -19,7 +19,9 @@ class ReviewFrame(FrameWrapper):
                 self.buttons[i].hide()
             return
         random.shuffle(self.wordList)  # 随机打乱单词列表
-        self.otherWordList = list(bookdata.words.values())
+        # self.otherWordList = list(bookdata.words.values())
+        self.otherWordList = bookdata.books[settings.settings['book_id']].word_list
+        self.otherWordList = [settings._id_to_word(word_id) for word_id in self.otherWordList]
         #print(type(self.otherWordList))
         self.currentWordIndex = 0
         self.currentWord = self.wordList[self.currentWordIndex].word
