@@ -295,9 +295,7 @@ class KlineChartCardWidget(ElevatedCardWidget):
             .add_xaxis(x_axis)
             .add_yaxis(y_axis=y_axis, series_name="新学单词")
             .set_global_opts(
-                title_opts=opts.TitleOpts(title="学习情况"),
-                xaxis_opts=opts.AxisOpts(type_="category"),
-                yaxis_opts=opts.AxisOpts(type_="value"),
+                title_opts=opts.TitleOpts(title="学习情况")
             )
         )
         

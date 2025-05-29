@@ -193,6 +193,9 @@ def from_feathers():
     data_dir = os.path.join(get_root_dir())
     word_df = pd.read_feather(os.path.join(data_dir, 'word.feather'))
     book_df = pd.read_feather(os.path.join(data_dir, 'book.feather'))
+
+    ed1 = time.time()
+    print(f"[log] time used to load data {ed1-st:.2f} seconds.")
     for _, row in word_df.iterrows():
         word = Word(
             id=row['id'],
