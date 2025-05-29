@@ -11,10 +11,7 @@ if __name__ == '__main__':
     Qt.QCoreApplication.setAttribute(Qt.Qt.ApplicationAttribute.AA_EnableHighDpiScaling)
 
     # 启动
-    root = os.path.dirname(os.path.abspath(__file__))
     app = QApplication(sys.argv)
-    icon = QIcon(os.path.join(root, "favico.ico"))
-    app.setWindowIcon(icon)
     window = MainWindow()
     window.show()
 

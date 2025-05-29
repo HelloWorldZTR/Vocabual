@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QHBoxLayout, QWidget, QSizePolicy, QSpacerItem
 import PyQt5.Qt as Qt
-from PyQt5.QtWebEngineWidgets import QWebEngineView
 from qframelesswindow.webengine import FramelessWebEngineView
 from qfluentwidgets import ElevatedCardWidget, ProgressRing, BodyLabel, ImageLabel, TitleLabel
 

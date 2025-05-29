@@ -1,20 +1,32 @@
-from qfluentwidgets import NavigationItemPosition, FluentWindow, SubtitleLabel, setFont
+from qfluentwidgets import NavigationItemPosition, FluentWindow, SplashScreen, setFont
 from qfluentwidgets import FluentIcon as FIF
+from qframelesswindow.webengine import FramelessWebEngineView
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon
 
-from .reciteFrame import ReciteFrame
-from .listFrame import ListFrame
-from .reviewFrame import ReviewFrame
-from .staticsFrame import StaticsFrame
-from .bookshelfFrame import BookshelfFrame
-
+import os
 
 class MainWindow(FluentWindow):
     """ 主界面 """
 
     def __init__(self):
         super().__init__()
+        root_dir = os.path.dirname(os.path.abspath(__file__))
+        favicon_path = os.path.join(root_dir, 'favico.png')
+        # print(f'Favicon path: {favicon_path}')
+
+        self.setWindowIcon(QIcon(favicon_path))
+        self.splashScreen = SplashScreen(self.windowIcon(), self, True)
+        self.splashScreen.setIconSize(QSize(102, 102))
+        self.show()
 
         # 创建子界面
+        from .reciteFrame import ReciteFrame
+        from .listFrame import ListFrame
+        from .reviewFrame import ReviewFrame
+        from .staticsFrame import StaticsFrame
+        from .bookshelfFrame import BookshelfFrame
+
         self.reciteInterface = ReciteFrame(self, 'reciteInterface')
         self.listInterface = ListFrame(self, 'listInterface')
         self.reviewInterface = ReviewFrame(self, 'reviewInterface')
@@ -27,7 +39,7 @@ class MainWindow(FluentWindow):
 
         self.stackedWidget.currentChanged.connect(lambda: self.stackedWidget.currentWidget().updateWindow())
 
-
+        self.splashScreen.finish()
     def initNavigation(self):
         # 设置导航栏的标题和图标
         self.addSubInterface(self.reciteInterface, FIF.HOME, '背单词', NavigationItemPosition.TOP)
