@@ -29,19 +29,21 @@ def to_feather2():
 from openai import OpenAI
 
 def translate_untranslated():
-    API_KEY = os.environ('DEEPSEEK_API_KEY') # : Replace with your own Deepseek API key
+    API_KEY = '' # : Replace with your own Deepseek API key
     model_name = "deepseek-chat"
     client = OpenAI(api_key=API_KEY, base_url="https://api.deepseek.com")
     prompt = """将下面的单词或短语翻译成中文，每行一条
 如果是单词，输出词性缩写+翻译
 如果有多个含义，输出词性缩写+翻译1，词性缩写+翻译2
+不要输出任何其他内容，只输出翻译结果，一行一条
 """
     
     words = pd.read_feather(os.path.join(os.path.dirname(__file__), 'word.feather'))
     wordlist = []
     for i, row in words.iterrows():
-        if row['translation'] == '暂无翻译':
+        if row['translation'] == '暂无翻译' or row['translation'] == '':
             wordlist.append((i, row['word']))
+    print(f"Total words to translate: {len(wordlist)}")
     batch_size = 20
     for i in range(0, len(wordlist), batch_size):
         if i + batch_size > len(wordlist):
@@ -78,7 +80,25 @@ def remove_word_from_translation():
         translation = str(row['translation'])
         if word in translation:
             translation = translation.replace(word, '').strip()
-            word_df.at[i, 'translation'] = translation
+        # Remove dashes
+        translation = translation.strip('-:').strip()
+        if '名词' in translation and 'n.' not in translation:
+            translation = translation.replace('名词', 'n.')
+        elif '动词' in translation and 'v.' not in translation:
+            translation = translation.replace('动词', 'v.')
+        elif '形容词' in translation and 'adj.' not in translation:
+            translation = translation.replace('形容词', 'adj.')
+        elif '副词' in translation and 'adv.' not in translation:
+            translation = translation.replace('副词', 'adv.')
+        word_df.at[i, 'translation'] = translation
     word_df.to_feather(os.path.join(os.path.dirname(__file__), 'word.feather'))
 
 remove_word_from_translation()
+
+def print_word_translation():
+    word_df = pd.read_feather(os.path.join(os.path.dirname(__file__), 'word.feather'))
+    for i, row in word_df.iterrows():
+        print(f"{row['word']}: {row['translation']}")
+        if i> 100:
+            break
+print_word_translation()
