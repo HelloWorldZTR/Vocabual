@@ -25,4 +25,60 @@ def to_feather2():
     df.to_feather(path.replace('.csv', '.feather'))
     print(f"Converted word_translation.csv to Feather format at {path.replace('.csv', '.feather')}")
 
-to_feather2()
+# to_feather2()
+from openai import OpenAI
+
+def translate_untranslated():
+    API_KEY = os.environ('DEEPSEEK_API_KEY') # : Replace with your own Deepseek API key
+    model_name = "deepseek-chat"
+    client = OpenAI(api_key=API_KEY, base_url="https://api.deepseek.com")
+    prompt = """将下面的单词或短语翻译成中文，每行一条
+如果是单词，输出词性缩写+翻译
+如果有多个含义，输出词性缩写+翻译1，词性缩写+翻译2
+"""
+    
+    words = pd.read_feather(os.path.join(os.path.dirname(__file__), 'word.feather'))
+    wordlist = []
+    for i, row in words.iterrows():
+        if row['translation'] == '暂无翻译':
+            wordlist.append((i, row['word']))
+    batch_size = 20
+    for i in range(0, len(wordlist), batch_size):
+        if i + batch_size > len(wordlist):
+            batch_size = len(wordlist) - i # Adjust batch size for the last batch
+        batch = wordlist[i:i + batch_size]
+        batch_words = [word[1] for word in batch]
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": "\n".join(batch_words)}
+                ],
+                stream=False,
+                temperature=0.2,
+                max_tokens=1000
+            )
+            translations = response.choices[0].message.content.strip().split('\n')
+            for j, translation in enumerate(translations):
+                index = batch[j][0]
+                words.at[index, 'translation'] = translation
+        except Exception as e:
+            print(f"Error occurred while translating batch: {e}")
+        finally:
+            words.to_feather(os.path.join(os.path.dirname(__file__), 'word2.feather'))
+            print(f"Batch {i // batch_size + 1} translated and saved.")
+
+# translate_untranslated()
+
+def remove_word_from_translation():
+    word_df = pd.read_feather(os.path.join(os.path.dirname(__file__), 'word.feather'))
+    for i, row in word_df.iterrows():
+        word = str(row['word'])
+        translation = str(row['translation'])
+        if word in translation:
+            translation = translation.replace(word, '').strip()
+            word_df.at[i, 'translation'] = translation
+    word_df.to_feather(os.path.join(os.path.dirname(__file__), 'word.feather'))
+
+remove_word_from_translation()
